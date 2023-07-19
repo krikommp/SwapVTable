@@ -5,6 +5,14 @@
 #ifndef SWAPVTABLE_MEMACCESSOR_H
 #define SWAPVTABLE_MEMACCESSOR_H
 
+#include "System.h"
+
+#define MEMORY_ROUND(_numToRound_, _multiple_) \
+    (_numToRound_ & (((size_t)-1) ^ (_multiple_ - 1)))
+
+#define MEMORY_ROUND_UP(_numToRound_, _multiple_) \
+    ((_numToRound_ + (_multiple_ - 1)) & (((size_t)-1) ^ (_multiple_ - 1)))
+
 enum ProtFlag
 {
     UNSET = 0,
@@ -17,14 +25,10 @@ enum ProtFlag
     RWX = R | W | X
 };
 
-#if defined(SWAP_VTABLE_OS_WINDOWS)
-
 int TranslateProtection(const ProtFlag flags);
 
 ProtFlag TranslateProtection(const int prot);
 
 ProtFlag mem_protect(uint64_t dest, uint64_t size, ProtFlag prot, bool& status);
-
-#endif
 
 #endif //SWAPVTABLE_MEMACCESSOR_H

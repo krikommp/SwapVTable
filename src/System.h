@@ -17,18 +17,24 @@
 
 #if defined(SWAP_VTABLE_OS_WINDOWS)
 #include <Windows.h>
+#elif defined(SWAP_VATBLE_OS_LINUX)
+#include <unistd.h>
+#include <sys/mman.h>
 #endif
 
 #if defined(SWAP_VTABLE_OS_WINDOWS)
-#define _PTR_MAX_VALUE ((void*)0x000F000000000000)
+#define _PTR_MAX_VALUE ((void*)0x000F'0000'0000'0000)
 #else
-#define _PTR_MAX_VALUE ((void*)0xFFF00000)
+#define _PTR_MAX_VALUE ((void*)0x0000'7FFF'FFFF'FFFF)
 #endif
+
+// 0x0000'7fbb'7241'afe0
 
 #include <cstdint>
 #include <cstring>
 #include <tuple>
 #include <functional>
 #include <map>
+#include <fstream>
 
 #endif //SWAPVTABLE_SYSTEM_H
