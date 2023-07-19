@@ -16,7 +16,7 @@ int main() {
 
     E *a = new E;
 
-    uint64_t offset = get_base_class_offset<B>(a);
+    uint64_t offset = get_base_class_offset<E>(a);
     printf("Base Offset: %ld\n", offset);
 
     auto [real_class_ptr, old_vtable] = get_class_and_vtable((char *) a, offset);

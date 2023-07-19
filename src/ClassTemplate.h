@@ -35,7 +35,7 @@ class C : public A, public B
     FULL_CLASS_TEMPLATE(C)
 };
 
-class E : public A, public B
+class E : virtual public A, virtual public B
 {
     FULL_CLASS_TEMPLATE(E)
 };
