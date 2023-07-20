@@ -10,16 +10,21 @@
 #elif defined(WIN32) || defined(_WIN32) || defined(__MINGW32__)
 #define SWAP_VTABLE_OS_WINDOWS
 #elif defined(__linux__) || defined(linux)
-#define SWAP_VATBLE_OS_LINUX
+#define SWAP_VTABLE_OS_LINUX
 #elif defined(__APPLE__)
 #define SWAP_VTABLE_OS_APPLE
 #endif
 
 #if defined(SWAP_VTABLE_OS_WINDOWS)
 #include <Windows.h>
-#elif defined(SWAP_VATBLE_OS_LINUX)
+#elif defined(SWAP_VTABLE_OS_LINUX)
 #include <unistd.h>
 #include <sys/mman.h>
+#elif defined(SWAP_VTABLE_OS_APPLE)
+#include <mach/mach_init.h>
+#include <mach/mach_vm.h>
+#include <mach/vm_prot.h>
+#include <mach/vm_map.h>
 #endif
 
 #if defined(SWAP_VTABLE_OS_WINDOWS)

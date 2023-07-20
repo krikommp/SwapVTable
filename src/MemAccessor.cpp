@@ -58,7 +58,7 @@ ProtFlag mem_protect(uint64_t dest, uint64_t size, ProtFlag prot, bool &status) 
     return TranslateProtection(orig);
 }
 
-#elif defined(SWAP_VATBLE_OS_LINUX)
+#elif defined(SWAP_VTABLE_OS_LINUX)
 
 struct region_t {
     uint64_t start;
@@ -144,6 +144,52 @@ ProtFlag mem_protect(uint64_t dest, uint64_t size, ProtFlag prot, bool &status) 
     uint64_t aligned_size = MEMORY_ROUND_UP(size, getPageSize());
     status = mprotect((void *) aligned_dest, aligned_size, TranslateProtection(prot)) == 0;
     return region_infos.prot;
+}
+
+#elif defined(SWAP_VTABLE_OS_APPLE)
+
+size_t PLH::getPageSize()
+{
+	return static_cast<uint64_t>(sysconf(_SC_PAGESIZE));
+}
+
+int TranslateProtection(const ProtFlag flags) {
+    int NativeFlag = VM_PROT_NONE;
+    if (flags & ProtFlag::X)
+        NativeFlag |= PROT_EXEC;
+
+    if (flags & ProtFlag::R)
+        NativeFlag |= PROT_READ;
+
+    if (flags & ProtFlag::W)
+        NativeFlag |= PROT_WRITE;
+
+    if (flags & ProtFlag::NONE)
+        NativeFlag = PROT_NONE;
+    return NativeFlag;
+}
+
+ProtFlag TranslateProtection(const int prot) {
+    ProtFlag flags = ProtFlag::UNSET;
+
+    if (prot & PROT_EXEC)
+        flags = ProtFlag(flags | ProtFlag::X);
+
+    if (prot & PROT_READ)
+        flags = ProtFlag(flags | ProtFlag::R);
+
+    if (prot & PROT_WRITE)
+        flags = ProtFlag(flags | ProtFlag::W);
+
+    if (prot == PROT_NONE)
+        flags = ProtFlag(flags | ProtFlag::NONE);
+
+    return flags;
+}
+
+ProtFlag mem_protect(uint64_t dest, uint64_t size, ProtFlag prot, bool &status) {
+    status = mach_vm_protect(mach_task_self(), (mach_vm_address_t)MEMORY_ROUND(dest, getPageSize()), (mach_vm_size_t)MEMORY_ROUND_UP(size, getPageSize()), FALSE, TranslateProtection(prot)) == KERN_SUCCESS;
+    return ProtFlag(ProtFlag::R | ProtFlag::X);
 }
 
 #endif
