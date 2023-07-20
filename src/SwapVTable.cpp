@@ -16,7 +16,7 @@ uint16_t get_v_fun_count(uintptr_t *vtable) {
     return v_count;
 }
 
-uintptr_t *swap_vtable(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_func, const VFunMap& redirectMap) {
+uintptr_t *swap_vtable_for_instance(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_func, const VFunMap& redirectMap) {
     bool status = false;
     mem_protect(class_ptr, num_v_func * sizeof(uintptr_t), ProtFlag(ProtFlag::R | ProtFlag::W), status);
 
@@ -29,12 +29,12 @@ uintptr_t *swap_vtable(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_fun
         }
     }
 
-    *(uintptr_t**)class_ptr = new_vtable;
+    *(uintptr_t**)class_ptr = (uint64_t*)new_vtable;
 
     return new_vtable;
 }
 
-VFunMap swap_vtable_func(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_func, const VFunMap &redirectMap)
+VFunMap swap_vtable_for_class(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_func, const VFunMap &redirectMap)
 {
     bool status;
     mem_protect((uint64_t)vtable, num_v_func * sizeof(uintptr_t), ProtFlag(ProtFlag::W | ProtFlag::R), status);

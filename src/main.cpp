@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "SwapVTable.h"
-
+#include "MemAccessor.h"
 #include "ClassTemplate.h"
 
 void g_func(void *Self) {
@@ -16,7 +16,7 @@ int main() {
 
     C *a = new C;
 
-    uint64_t offset = get_base_class_offset<A>(a);
+    uint64_t offset = get_base_class_offset<B>(a);
     printf("Base Offset: %lld\n", offset);
 
     auto [real_class_ptr, old_vtable] = get_class_and_vtable((char *) a, offset);
@@ -30,7 +30,8 @@ int main() {
             //{1, (uintptr_t) g_func}
     };
 
-    uintptr_t *new_vtable = swap_vtable(real_class_ptr, old_vtable, v_count, map);
+    swap_vtable_for_instance(real_class_ptr, old_vtable, v_count, map);
+
 
     printf("========== A ==========\n");
     a->func_A_0();
@@ -46,5 +47,26 @@ int main() {
     a->func_C_2();
     printf("========== END ==========\n");
 
+    C* c = new C;
+    printf("========== A ==========\n");
+    c->func_A_0();
+    c->func_A_1();
+    c->func_A_2();
+    printf("========== B ==========\n");
+    c->func_B_0();
+    c->func_B_1();
+    c->func_B_2();
+    printf("========== C ==========\n");
+    c->func_C_0();
+    c->func_C_1();
+    c->func_C_2();
+    printf("========== END ==========\n");
+
+    A* o = new A;
+    printf("========== A ==========\n");
+    o->func_A_0();
+    o->func_A_1();
+    o->func_A_2();
+    
     return 0;
 }

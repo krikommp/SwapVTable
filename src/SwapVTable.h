@@ -13,9 +13,9 @@ uint16_t get_v_fun_count(uintptr_t* vtable);
 
 std::tuple<uint64_t, uintptr_t*> get_class_and_vtable(char* class_ptr, uint64_t offset);
 
-uintptr_t* swap_vtable(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
+uintptr_t* swap_vtable_for_instance(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
 
-VFunMap swap_vtable_func(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
+VFunMap swap_vtable_for_class(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
 
 void foreach_call_vtable(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func);
 
