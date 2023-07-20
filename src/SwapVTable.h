@@ -15,6 +15,8 @@ std::tuple<uint64_t, uintptr_t*> get_class_and_vtable(char* class_ptr, uint64_t 
 
 uintptr_t* swap_vtable(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
 
+VFunMap swap_vtable_func(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func, const VFunMap& redirectMap);
+
 void foreach_call_vtable(uint64_t class_ptr, uintptr_t* vtable, uint16_t num_v_func);
 
 template <typename T, typename U>

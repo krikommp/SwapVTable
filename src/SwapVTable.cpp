@@ -34,6 +34,23 @@ uintptr_t *swap_vtable(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_fun
     return new_vtable;
 }
 
+VFunMap swap_vtable_func(uint64_t class_ptr, uintptr_t *vtable, uint16_t num_v_func, const VFunMap &redirectMap)
+{
+    bool status;
+    mem_protect((uint64_t)vtable, num_v_func * sizeof(uintptr_t), ProtFlag(ProtFlag::W | ProtFlag::R), status);
+
+    VFunMap originFunMap;
+
+    for (const auto& p : redirectMap) {
+        if (p.first < num_v_func) {
+            originFunMap[p.first] = (uint64_t)vtable[p.first];
+            vtable[p.first] = (uintptr_t)p.second;
+        }
+    }
+
+    return originFunMap;
+}
+
 std::tuple<uint64_t, uintptr_t *> get_class_and_vtable(char *class_ptr, uint64_t offset) {
     uint64_t real_class_ptr = (uint64_t)(class_ptr + offset);
     uintptr_t* vtable = *(uintptr_t**)real_class_ptr;
