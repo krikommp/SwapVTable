@@ -14,10 +14,10 @@ void g_func(void *Self) {
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    E *a = new E;
+    C *a = new C;
 
-    uint64_t offset = get_base_class_offset<E>(a);
-    printf("Base Offset: %ld\n", offset);
+    uint64_t offset = get_base_class_offset<A>(a);
+    printf("Base Offset: %lld\n", offset);
 
     auto [real_class_ptr, old_vtable] = get_class_and_vtable((char *) a, offset);
     printf("old vtable address: %p\n", old_vtable);
@@ -41,9 +41,9 @@ int main() {
     a->func_B_1();
     a->func_B_2();
     printf("========== C ==========\n");
-    a->func_E_0();
-    a->func_E_1();
-    a->func_E_2();
+    a->func_C_0();
+    a->func_C_1();
+    a->func_C_2();
     printf("========== END ==========\n");
 
     return 0;

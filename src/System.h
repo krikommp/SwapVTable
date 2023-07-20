@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #elif defined(SWAP_VTABLE_OS_APPLE)
+#include <unistd.h>
+#include <sys/mman.h>
 #include <mach/mach_init.h>
 #include <mach/mach_vm.h>
 #include <mach/vm_prot.h>

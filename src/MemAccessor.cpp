@@ -148,7 +148,7 @@ ProtFlag mem_protect(uint64_t dest, uint64_t size, ProtFlag prot, bool &status) 
 
 #elif defined(SWAP_VTABLE_OS_APPLE)
 
-size_t PLH::getPageSize()
+size_t getPageSize()
 {
 	return static_cast<uint64_t>(sysconf(_SC_PAGESIZE));
 }
